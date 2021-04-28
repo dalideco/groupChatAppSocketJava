@@ -3,6 +3,11 @@ import java.net.*;
 import java.util.Scanner;
 
 public class Client {
+    private static synchronized void leave(){
+        System.out.println("leaving");
+        System.exit(0);
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("username: ");;
@@ -33,8 +38,8 @@ public class Client {
                 pw.flush();
 
                 if(message.equals("exit()")){
-                    System.out.println("leaving");
-                    System.exit(0);
+                    leave();
+                    break;
                 }
                 
             }

@@ -17,6 +17,13 @@ public class ThreadServer extends Thread{
         sockets.add(s);
     }
 
+    public void SendToAll(String message){
+        for(PrintWriter printer : printers){
+            printer.println(message);
+            printer.flush();
+        }
+    }
+
     public void run(){
         try{
             PrintWriter pw = new PrintWriter(s.getOutputStream());
@@ -27,7 +34,7 @@ public class ThreadServer extends Thread{
 
             //getting username
             String username = (String)br.readLine(); 
-            System.out.printf("--%s connected\n",username);
+            SendToAll("--"+username+" connected\n");
             
             // sending welcome
             pw.println("bienvenue dans le serveur");
@@ -38,22 +45,17 @@ public class ThreadServer extends Thread{
                 String message = (String) br.readLine();
 
                 //replace this by a function that sends mails to
-                //  all cllients from all sockets
-
+                //  all cllients from all sockets         
             
-                for(PrintWriter printer : printers){
-                    printer.println(message);
-                    printer.flush();
-                }
-
                 if(message.equals("exit()")){
-                    System.out.println(username +" left");
+                    SendToAll(username +" left");
+                    s.close();
                     sockets.remove(s);
                     printers.remove(pw);
                     break; 
-                }
+                }else SendToAll(message);
             }
-            s.close();
+            
             
         }catch(Exception e){
             e.printStackTrace();
