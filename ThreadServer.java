@@ -1,16 +1,30 @@
 import java.net.*;
+import java.util.ArrayList;
 import java.io.*;
 public class ThreadServer extends Thread{
+    private static ArrayList<Socket> sockets ; 
+    private static ArrayList<PrintWriter> printers;
 
-    Socket s=null;
+
+    static{
+        sockets = new ArrayList<Socket>();
+        printers = new ArrayList<PrintWriter>();
+    }
+
+    private Socket s= null;
     public ThreadServer(Socket s){
         this.s=s;
+        sockets.add(s);
     }
+
     public void run(){
         try{
             PrintWriter pw = new PrintWriter(s.getOutputStream());
             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
             
+            //adding the pw to printers
+            printers.add(pw);
+
             //getting username
             String username = (String)br.readLine(); 
             System.out.printf("--%s connected\n",username);
@@ -25,9 +39,21 @@ public class ThreadServer extends Thread{
 
                 //replace this by a function that sends mails to
                 //  all cllients from all sockets
-                pw.println(message);
-                pw.flush();
+
+            
+                for(PrintWriter printer : printers){
+                    printer.println(message);
+                    printer.flush();
+                }
+
+                if(message.equals("exit()")){
+                    System.out.println(username +" left");
+                    sockets.remove(s);
+                    printers.remove(pw);
+                    break; 
+                }
             }
+            s.close();
             
         }catch(Exception e){
             e.printStackTrace();

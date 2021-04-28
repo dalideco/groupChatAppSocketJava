@@ -31,7 +31,15 @@ public class Client {
                 pw.println(message);
 
                 pw.flush();
+
+                if(message.equals("exit()")){
+                    System.out.println("leaving");
+                    System.exit(0);
+                }
+                
             }
+            
+
 
         }catch(Exception e ){
             System.out.println("Socket not found");
