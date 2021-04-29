@@ -10,7 +10,7 @@ public class ThreadReading extends Thread{
         try{
             while(true){
                 String message = (String)br.readLine();
-                System.out.println(message);
+                if(message !=null)System.out.println(message);
             }
         }catch(Exception e){
             e.printStackTrace();

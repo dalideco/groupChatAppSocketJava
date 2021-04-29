@@ -34,11 +34,11 @@ public class ThreadServer extends Thread{
 
             //getting username
             String username = (String)br.readLine(); 
-            SendToAll("--"+username+" connected\n");
             
             // sending welcome
             pw.println("bienvenue dans le serveur");
             pw.flush();
+            SendToAll("--"+username+" connected");
             
             //getting messages from client and sending them to others
             while(true){
@@ -48,12 +48,15 @@ public class ThreadServer extends Thread{
                 //  all cllients from all sockets         
             
                 if(message.equals("exit()")){
-                    SendToAll(username +" left");
-                    s.close();
+                    SendToAll("--"+username +" left");
                     sockets.remove(s);
                     printers.remove(pw);
+                    br.close();
+                    pw.close();
+                    s.close();
+                    
                     break; 
-                }else SendToAll(message);
+                }else SendToAll(username +":"+message);
             }
             
             
